@@ -8,27 +8,25 @@ View(bonemarrow@meta.data)
 # Extraer la matriz de conteo de expresión del objeto Seurat 
 ### En este código, pbmc.data1@assays$RNA@counts accede a la matriz de conteo de expresión dentro del objeto Seurat pbmc.data1. Luego, esta matriz de conteo se pasa como argumento counts a CreateSeuratObject
 counts_matrix <- bonemarrow@assays$RNA@counts
-counts_matrix <- bonemarrow@assays$RNA@counts
-ensembl_ids <- rownames(counts_matrix)
-gene_symbols <- select(org.Mm.eg.db, keys=ensembl_ids, columns="SYMBOL", keytype="ENSEMBL")
+###Intento de agregar los genesymbol###
+#ensembl_ids <- rownames(counts_matrix)
+#gene_symbols <- select(org.Mm.eg.db, keys=ensembl_ids, columns="SYMBOL", keytype="ENSEMBL")
 
 # Ensure the number of gene symbols in count matrix is same as list to add
-nrow(counts_matrix) == length(gene_symbols$SYMBOL)
+#nrow(counts_matrix) == length(gene_symbols$SYMBOL)
 
 # If the above is FALSE, you will need to modify gene_symbols$SYMBOL to correct
 # Something using match might work.
-gene_symbols <- gene_symbols[match(rownames(counts_matrix), gene_symbols$ENSEMBL), ]
-
-rownames(counts_matrix) <- gene_symbols$SYMBOL
-# Identificar y eliminar filas duplicadas
+#gene_symbols <- gene_symbols[match(rownames(counts_matrix), gene_symbols$ENSEMBL), ]
+#rownames(counts_matrix) <- gene_symbols$SYMBOL
 # Identificar y eliminar filas duplicadas
 duplicated_rows <- apply(counts_matrix, 1, anyDuplicated)
 counts_matrix_unique <- counts_matrix[!duplicated_rows == 0, ]
 # Agregar nombres de fila únicos a la matriz de recuento
-rownames(counts_matrix_unique) <- make.unique(rownames(counts_matrix_unique))
+#rownames(counts_matrix_unique) <- make.unique(rownames(counts_matrix_unique))
 
 # Crear objeto Seurat con la matriz de recuento sin filas duplicadas
-bonecounts <- CreateSeuratObject(counts_matrix_unique, project = "seuratM", 
+#bonecounts <- CreateSeuratObject(counts_matrix_unique, project = "seuratM", 
                                  assay = "RNA", min.cells = 0, min.features = 0, 
                                  names.field = 1, names.delim = "_", 
                                  meta.data = bonemarrow@meta.data)
